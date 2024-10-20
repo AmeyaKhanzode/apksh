@@ -52,6 +52,17 @@ void cleanup_readline(void)
     write_history(history_file);
 }
 
+void free_tokens(char **tokens)
+{
+    if (!tokens) return;
+    
+    for (int i = 0; tokens[i] != NULL; i++) {
+        free(tokens[i]);
+        tokens[i] = NULL;
+    }
+    free(tokens);
+}
+
 void shell_loop(void)
 {
     char *line = NULL;
@@ -92,7 +103,8 @@ void shell_loop(void)
         status = shell_execute(args);
 
         free(line);
-        free(args);
+        free_tokens(args);
+        args = NULL;
     } while (status);
 }
 
